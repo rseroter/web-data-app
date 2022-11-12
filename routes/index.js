@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', async function(req, res, next) {
-    console.log('called post - creating row')
+    console.log('called post - creating row for ' + req.body.inputname)
 
     const row = [
         {empid: uuidv4(), fullname: req.body.inputname}
@@ -27,7 +27,7 @@ router.post('/', async function(req, res, next) {
     console.log(`Inserted 1 rows`);
 
 
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Employee Entry Form' });
   });
 
 module.exports = router;
