@@ -6,7 +6,9 @@ steps:
   - name: bash
     script: |
       #!/usr/bin/env bash
-      pwd
+      mkdir changelog
+      cp /db_config/* /changelog
+      cd changelog
       ls
   #- name: gcr.io/cloud-builders/gsutil
   #  args:
