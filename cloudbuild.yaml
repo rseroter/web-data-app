@@ -19,13 +19,14 @@ steps:
       - /workspace/lib
     dir: lib
     id: Get Liquibase Jar files
-  - name: bash
-    script: |
-      #!/usr/bin/env bash
-      ls
-      echo 'all folders listed'
-      cd lib
-      ls
+  #- name: bash
+  #  id: Prove that files copied correctly
+  #  script: |
+  #    #!/usr/bin/env bash
+  #    ls
+  #    echo 'all folders listed'
+  #    cd lib
+  #    ls
   #- name: gcr.io/cloud-builders/gsutil
   #  args:
   #    - cp
@@ -33,18 +34,18 @@ steps:
   #    - /workspace/changelog
   #  dir: changelog
   #  id: Get Liquibase config files
-  #- name: gcr.io/cloud-builders/docker
-  #  args:
-  #    - run
-  #    - '--network=cloudbuild'
-  #    - '--rm'
-  #    - '--volume'
-  #    - '/workspace/changelog:/liquibase/changelog'
-  #    - '--volume'
-  #    - '/workspace/lib:/liquibase/lib'
-  #    - liquibase/liquibase
-  #    - '--include-system-classpath=true'
-  #    - '--changeLogFile=changelog/changelog.yaml'
-  #    - '--defaultsFile=/liquibase/changelog/liquibase.properties'
-  #    - update
-  #  id: Update BQ
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - run
+      - '--network=cloudbuild'
+      - '--rm'
+      - '--volume'
+      - '/workspace/db_config:/liquibase/changelog'
+      - '--volume'
+      - '/workspace/lib:/liquibase/lib'
+      - liquibase/liquibase
+      - '--include-system-classpath=true'
+      - '--changeLogFile=changelog/changelog.yaml'
+      - '--defaultsFile=/liquibase/changelog/liquibase.properties'
+      - update
+    id: Update BigQuery
