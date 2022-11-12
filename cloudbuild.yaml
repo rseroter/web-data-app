@@ -14,9 +14,9 @@ steps:
   #    ls
   - name: gcr.io/cloud-builders/gsutil
     args:
-      - cp
-      - 'gs://liquibase-jars/*'
-      - /workspace/lib
+    - cp
+    - 'gs://liquibase-jars/*'
+    - /workspace/lib
     dir: lib
     id: Get Liquibase Jar files
   #- name: bash
@@ -36,16 +36,24 @@ steps:
   #  id: Get Liquibase config files
   - name: gcr.io/cloud-builders/docker
     args:
-      - run
-      - '--network=cloudbuild'
-      - '--rm'
-      - '--volume'
-      - '/workspace/db_config:/liquibase/changelog'
-      - '--volume'
-      - '/workspace/lib:/liquibase/lib'
-      - liquibase/liquibase
-      - '--include-system-classpath=true'
-      - '--changeLogFile=changelog/changelog.yaml'
-      - '--defaultsFile=/liquibase/changelog/liquibase.properties'
-      - update
+    - run
+    - '--network=cloudbuild'
+    - '--rm'
+    - '--volume'
+    - '/workspace/db_config:/liquibase/changelog'
+    - '--volume'
+    - '/workspace/lib:/liquibase/lib'
+    - liquibase/liquibase
+    - '--include-system-classpath=true'
+    - '--changeLogFile=changelog/changelog.yaml'
+    - '--defaultsFile=/liquibase/changelog/liquibase.properties'
+    - update
     id: Update BigQuery
+  - name: gcr.io/cloud-builders/gke-deploy
+    id: deploy app to GKE
+    args:
+    - --filename=/workspace/k8s_config
+    - --image=gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA
+    - --location=us-central1-c
+    - --cluster=cluster-seroter-gke-1110
+
