@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: addColumn-example1
+      author: rseroter
+      changes:
+        - addColumn:
+            tableName: names
+            columns:
+            - column:
+                name: newcol1
+                type: STRING
