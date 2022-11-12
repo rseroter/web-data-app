@@ -35,6 +35,7 @@ steps:
   #  dir: changelog
   #  id: Get Liquibase config files
   - name: gcr.io/cloud-builders/docker
+    id: Deploy changes to BigQuery
     args:
     - run
     - '--network=cloudbuild'
@@ -48,10 +49,10 @@ steps:
     - '--changeLogFile=changelog/changelog.yaml'
     - '--defaultsFile=/liquibase/changelog/liquibase.properties'
     - update
-    id: Update BigQuery
   - name: gcr.io/cloud-builders/gke-deploy
-    id: deploy app to GKE
+    id: Deploy app to GKE
     args:
+    - run
     - --filename=/workspace/k8s_config
     - --image=gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA
     - --location=us-central1-c
