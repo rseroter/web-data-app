@@ -3,6 +3,10 @@ steps:
     id: Build Node app
     entrypoint: 'pack'
     args: ['build', '--builder=gcr.io/buildpacks/builder', '--publish', 'gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA']
+  - name: bash
+    script: |
+      #!/usr/bin/env bash
+      ls
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     id: Create Cloud Deploy release
     args: 
@@ -11,6 +15,6 @@ steps:
           "--delivery-pipeline", "data-app-pipeline",
           "--region", "us-central1",
           "--images", "web-data-app=gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA",
-          "--skaffold-file", "/deploy_config/skaffold.yaml"
+          "--skaffold-file", "deploy_config/skaffold.yaml"
         ]
     entrypoint: gcloud
