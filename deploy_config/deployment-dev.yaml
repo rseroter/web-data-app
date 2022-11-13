@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-ci-deployment-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-ci
+  template:
+    metadata:
+      labels:
+        app: db-ci
+    spec:
+      volumes:
+      - name: workspace
+      #this creates a folder called workspace where all the source goes?
+        emptyDir: {}
+      initContainers:
+        - name: create-folders
+          image: alpine
+          command:
+          - /bin/sh
+          - -c
+          - |
+            cd liquibase
+            mkdir changelog
+            mkdir lib
+            ls
+            echo "folders created"
+          volumeMounts:
+          - name: workspace
+            mountPath: /liquibase
+            readOnly: false      
+        - name: preload-changelog
+          image: bitnami/git
+          command:
+          - /bin/sh
+          - -c
+          - |
+            git clone https://github.com/rseroter/web-data-app.git
+            cp web-data-app/db_config/* liquibase/changelog
+            cd liquibase/changelog
+            ls
+          volumeMounts:
+          - name: workspace
+            mountPath: /liquibase
+            readOnly: false
+        - name: preload-jars
+          image: gcr.io/google.com/cloudsdktool/cloud-sdk
+          command: ["gsutil"]
+          args: ['cp', 'gs://liquibase-jars/*', '/liquibase/lib/']
+          volumeMounts:
+          - name: workspace
+            mountPath: /liquibase
+            readOnly: false
+        - name: run-lq
+          image: liquibase/liquibase
+          command: ["liquibase"]
+          args: ['update', '--include-system-classpath=true', '--changeLogFile=/changelog/changelog.yaml', '--defaultsFile=/liquibase/changelog/liquibase.properties']
+          volumeMounts:
+          - name: workspace
+            mountPath: /liquibase/changelog
+            subPath: changelog
+            readOnly: false
+          - name: workspace
+            mountPath: /liquibase/lib
+            subPath: lib
+            readOnly: false
+      containers:
+      - name: web-data-app-dev
+        image: web-data-app
+        ports:
+          - containerPort: 3000
+        volumeMounts:
+        - name: workspace
+          mountPath: /liquibase

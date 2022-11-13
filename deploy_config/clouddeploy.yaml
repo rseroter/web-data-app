@@ -1,0 +1,19 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+ name: data-app-pipeline
+description: application pipeline for app and BQ changes
+serialPipeline:
+ stages:
+ - targetId: devenv
+   profiles:
+   - dev
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: devenv
+description: development GKE cluster
+gke:
+ cluster: projects/seroter-project-base/locations/us-central1-c/clusters/cluster-seroter-gke-1110

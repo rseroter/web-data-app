@@ -1,0 +1,17 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+metadata:
+ name: web-data-app-config
+profiles:
+ - name: prod
+   deploy:
+     kubectl:
+       manifests:
+         - deployment-prod.yaml
+         - service-prod.yaml
+ - name: dev
+   deploy:
+     kubectl:
+       manifests:
+         - deployment-dev.yaml
+         - service-dev.yaml
