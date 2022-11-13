@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db-ci
+      app: web-data-app-prod
   template:
     metadata:
       labels:
-        app: db-ci
+        app: web-data-app-prod
     spec:
       volumes:
       - name: workspace
