@@ -1,0 +1,36 @@
+steps:
+  - name: 'gcr.io/k8s-skaffold/pack'
+    id: Build Node app
+    entrypoint: 'pack'
+    args: ['build', '--builder=gcr.io/buildpacks/builder', '--publish', 'gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA']
+  - name: gcr.io/cloud-builders/gsutil
+    id: Get Liquibase Jar files
+    args:
+    - cp
+    - 'gs://liquibase-jars/*'
+    - /workspace/lib
+    dir: lib
+  - name: gcr.io/cloud-builders/docker
+    id: Deploy changes to BigQuery
+    args:
+    - run
+    - '--network=cloudbuild'
+    - '--rm'
+    - '--volume'
+    - '/workspace/db_config:/liquibase/changelog'
+    - '--volume'
+    - '/workspace/lib:/liquibase/lib'
+    - liquibase/liquibase
+    - '--include-system-classpath=true'
+    - '--changeLogFile=changelog/changelog.yaml'
+    - '--defaultsFile=/liquibase/changelog/liquibase.properties'
+    - update
+  - name: gcr.io/cloud-builders/gke-deploy
+    id: Deploy app to GKE
+    args:
+    - run
+    - --filename=/workspace/k8s_config
+    - --image=gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA
+    - --location=us-central1-c
+    - --cluster=cluster-seroter-gke-1110
+
