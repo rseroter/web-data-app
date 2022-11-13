@@ -11,7 +11,7 @@ steps:
     id: Create Cloud Deploy release
     args: 
         [
-          "deploy", "releases", "create", "test-release-004",
+          "deploy", "releases", "create", "test-release-005",
           "--delivery-pipeline", "data-app-pipeline",
           "--region", "us-central1",
           "--images", "web-data-app=gcr.io/$PROJECT_ID/web-data-app:$COMMIT_SHA",
