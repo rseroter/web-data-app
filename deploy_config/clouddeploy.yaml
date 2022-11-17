@@ -8,6 +8,9 @@ serialPipeline:
  - targetId: devenv
    profiles:
    - dev
+ - targetId: prodenv
+   profiles:
+   - prod
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -17,3 +20,13 @@ metadata:
 description: development GKE cluster
 gke:
  cluster: projects/seroter-project-base/locations/us-central1-c/clusters/cluster-seroter-gke-1110
+
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: prodenv
+description: production GKE cluster
+gke:
+ cluster: projects/seroter-project-base/locations/us-central1-c/clusters/cluster-seroter-gke-1116

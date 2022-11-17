@@ -21,8 +21,8 @@ router.post('/', async function(req, res, next) {
 
     // Insert data into a table
     await bigquery
-    .dataset('employees_us')
-    .table('names')
+    .dataset('employee_dataset')
+    .table('names_1')
     .insert(row);
     console.log(`Inserted 1 rows`);
 
