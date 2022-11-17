@@ -1,11 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: addColumn-example3
+      id: addColumn-example4
       author: rseroter
       changes:
         - addColumn:
-            tableName: names
+            tableName: names_1
             columns:
             - column:
-                name: newcol3
+                name: manager
                 type: STRING
