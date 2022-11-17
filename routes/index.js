@@ -16,6 +16,7 @@ router.post('/', async function(req, res, next) {
     console.log('called post - creating row for ' + req.body.inputname)
 
     const row = [
+        //generate unique id
         {id: uuidv4(), fullname: req.body.inputname}
       ];
 
