@@ -16,7 +16,7 @@ router.post('/', async function(req, res, next) {
     console.log('called post - creating row for ' + req.body.inputname)
 
     const row = [
-        {empid: uuidv4(), fullname: req.body.inputname}
+        {id: uuidv4(), fullname: req.body.inputname}
       ];
 
     // Insert data into a table
